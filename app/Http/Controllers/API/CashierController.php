@@ -50,6 +50,21 @@ class CashierController extends Controller
         }
     }
 
+    public function fetch(Request $request)
+    {
+        try {
+            return ResponseFormatter::success([
+                'cashier' => $request->cashier()
+            ], 'Data Profile berhasil diambil');
+        } catch (Exception $error) {
+            return ResponseFormatter::error([
+                'message' => 'Something went wrong!',
+                'error' => $error,
+            ], 'Gagal Autentikasi', 500);
+            //throw $th;
+        }
+    }
+
     public function login(Request $request)
     {
 
