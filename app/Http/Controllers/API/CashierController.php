@@ -54,7 +54,7 @@ class CashierController extends Controller
     {
         try {
             return ResponseFormatter::success([
-                'cashier' => $request->cashier()
+                'cashier' => $request->user()
             ], 'Data Profile berhasil diambil');
         } catch (Exception $error) {
             return ResponseFormatter::error([
