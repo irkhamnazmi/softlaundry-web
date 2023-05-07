@@ -13,6 +13,29 @@ use Laravel\Fortify\Rules\Password;
 
 class CashierController extends Controller
 {
+
+    public function all()
+    {
+
+        try {
+
+            $cashier = Cashier::all();
+
+            return ResponseFormatter::success([
+                'cashier' => $cashier,
+            ], 'Data Kasir berhasil diambil', 200);
+        } catch (Exception $error) {
+            return ResponseFormatter::error(
+                [
+                    $error,
+                    'Ada sesuatu yang salah!',
+                ],
+                'Gagal Autentikasi',
+                500
+            );
+        }
+    }
+
     public function register(Request $request)
     {
         try {
@@ -44,24 +67,102 @@ class CashierController extends Controller
             ], 'Kasir berhasil didaftarkan');
         } catch (Exception $error) {
             return ResponseFormatter::error([
-                'message' => 'Something went wrong!',
                 'error' => $error,
-            ], 'Gagal Autentikasi', 500);
+            ], 'Something went wrong!', 500);
         }
     }
 
-    public function fetch(Request $request)
+    public function get($id)
+    {
+        try {
+            $cashier = Cashier::where('id', $id);
+            $x = $cashier->first();
+            if ($x) {
+                return ResponseFormatter::success([
+                    'cashier' => $x
+                ], 'Data Kasir berhasil diambil');
+            } else {
+                return ResponseFormatter::error([
+                    'cashier' => null,
+                ], 'Data Kasir tidak ditemukan', 404);
+            }
+        } catch (Exception $error) {
+            return ResponseFormatter::error([
+                'error' => $error,
+            ], 'Something went wrong!', 500);
+            //throw $th;
+        }
+    }
+
+    public function profile(Request $request)
     {
         try {
             return ResponseFormatter::success([
                 'cashier' => $request->user()
-            ], 'Data Profile berhasil diambil');
+            ], 'Data Kasir berhasil diambil');
         } catch (Exception $error) {
             return ResponseFormatter::error([
-                'message' => 'Something went wrong!',
                 'error' => $error,
-            ], 'Gagal Autentikasi', 500);
+            ], 'Something went wrong!', 500);
             //throw $th;
+        }
+    }
+
+    public function edit(Request $request)
+    {
+        try {
+            $cashier = Cashier::where('id', $request->id);
+            $x = $cashier->first();
+            if (!empty($request->password)) {
+                $pass = Hash::make($request->password);
+            } else {
+                $pass = $x->password;
+            }
+
+            $cashier->update([
+                'name' => $request->name,
+                'address' => $request->address,
+                'phone_number' => $request->phone_number,
+                'email' => $request->email,
+                'roles' => $request->roles,
+                'password' => $pass,
+            ]);
+            return ResponseFormatter::success([
+                'cashier' => $cashier->first()
+            ], 'Data Kasir berhasil diedit');
+        } catch (Exception $error) {
+            return ResponseFormatter::error([
+                'error' => $error,
+            ], 'Something went wrong!', 500);
+            //throw $th;
+        }
+    }
+
+    public function delete($id)
+    {
+        try {
+
+            $cashier = Cashier::where('id', $id);
+            $x = $cashier->first();
+
+            if (!empty($x)) {
+
+                $cashier->delete();
+
+                return ResponseFormatter::success(
+                    [
+                        'Cashier' => $cashier,
+                    ],
+                    'Data Kasir berhasil dihapus',
+                    200
+                );
+            } else {
+                return ResponseFormatter::error([null], 'Kasir gagal dihapus', 404);
+            }
+        } catch (Exception $error) {
+            ResponseFormatter::error([
+                $error,
+            ], 'Ada sesuatu yang salah!', 500);
         }
     }
 
@@ -97,9 +198,8 @@ class CashierController extends Controller
             ], 'Autentikasi Berhasil');
         } catch (Exception $error) {
             return ResponseFormatter::error([
-                'message' => 'Something went wrong!',
                 'error' => $error,
-            ], 'Gagal Autentikasi', 500);
+            ], 'Something went wrong!', 500);
         }
     }
 

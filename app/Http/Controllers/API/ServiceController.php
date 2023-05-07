@@ -32,6 +32,29 @@ class ServiceController extends Controller
         }
     }
 
+    public function get($id)
+    {
+        try {
+            $service = Service::where('id', $id);
+            $x = $service->first();
+            if ($x) {
+                return ResponseFormatter::success([
+                    'service' => $x
+                ], 'Data Layanan berhasil diambil');
+            } else {
+                return ResponseFormatter::error([
+                    'service' => null,
+                ], 'Data Layanan tidak ditemukan', 404);
+            }
+        } catch (Exception $error) {
+            return ResponseFormatter::error([
+                'error' => $error,
+            ], 'Something went wrong!', 500);
+            //throw $th;
+        }
+    }
+
+
     public function add(Request $request)
     {
         try {
@@ -69,10 +92,7 @@ class ServiceController extends Controller
     public function edit(Request $request)
     {
         try {
-            $request->validate([
-                'name' => ['required', 'string', 'max:255'],
-                'price' => ['required', 'integer'],
-            ]);
+
 
             $service = Service::where('id', $request->id);
             $service->first();

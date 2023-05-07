@@ -66,18 +66,36 @@ class MemberController extends Controller
         }
     }
 
+    public function get($id)
+    {
+        try {
+            $member = Member::where('id', $id);
+            $x = $member->first();
+            if ($x) {
+                return ResponseFormatter::success([
+                    'member' => $x
+                ], 'Data Member berhasil diambil');
+            } else {
+                return ResponseFormatter::error([
+                    'member' => null,
+                ], 'Data Member tidak ditemukan', 404);
+            }
+        } catch (Exception $error) {
+            return ResponseFormatter::error([
+                'error' => $error,
+            ], 'Something went wrong!', 500);
+            //throw $th;
+        }
+    }
+
+
     public function edit(Request $request)
     {
         try {
-            $request->validate([
-                'member_id' => ['required', 'string', 'max:255'],
-                'name' => ['required', 'string', 'max:255'],
-                'address' => ['required', 'string', 'max:255'],
-                'phone_number' => ['required', 'string', 'max:255'],
-            ]);
 
             $member = Member::where('member_id', $request->member_id);
-            $member->first();
+            $x = $member->first();
+
             if (!empty($x)) {
 
                 $member->update([
@@ -88,14 +106,13 @@ class MemberController extends Controller
 
                 return ResponseFormatter::success(
                     [
-
                         'Member' => $member->first(),
                     ],
-                    'Member berhasil diubah',
+                    'Data Member berhasil diubah',
                     200
                 );
             } else {
-                return ResponseFormatter::error(null, 'Member gagal dihapus', 404);
+                return ResponseFormatter::error(null, 'Data Member gagal diubah', 404);
             }
         } catch (Exception $error) {
             ResponseFormatter::error(

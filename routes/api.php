@@ -24,16 +24,25 @@ Route::post('login', [CashierController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [CashierController::class, 'logout']);
-    Route::get('cashiers/one', [CashierController::class, 'fetch']);
+    Route::get('cashiers/profile', [CashierController::class, 'profile']);
+    Route::get('cashiers', [CashierController::class, 'all']);
+    Route::get('cashiers/get/{id}', [CashierController::class, 'get']);
+    Route::put('cashiers/edit', [CashierController::class, 'edit']);
+    Route::delete('cashiers/delete/{id}', [CashierController::class, 'delete']);
+
     Route::get('members', [MemberController::class, 'all']);
+    Route::get('members/get/{id}', [MemberController::class, 'get']);
     Route::post('members/add', [MemberController::class, 'add']);
-    Route::post('members/edit', [MemberController::class, 'edit']);
+    Route::put('members/edit', [MemberController::class, 'edit']);
     Route::delete('members/delete/{id}', [MemberController::class, 'delete']);
+
     Route::get('services', [ServiceController::class, 'all']);
-    Route::post('services/add', [ServiceController::class, 'add']);
-    Route::post('services/edit', [ServiceController::class, 'edit']);
+    Route::get('services/get/{id}', [ServiceController::class, 'get']);
+    Route::post('services/add', [ServicesController::class, 'add']);
+    Route::put('services/edit', [ServiceController::class, 'edit']);
     Route::delete('services/delete/{id}', [ServiceController::class, 'delete']);
 
     Route::get('transactions', [TransactionController::class, 'all']);
+    Route::get('transactions/get/{id}', [TransactionController::class, 'get']);
     Route::post('transactions/checkout', [TransactionController::class, 'checkout']);
 });

@@ -33,6 +33,29 @@ class TransactionController extends Controller
         }
     }
 
+    public function get($id)
+    {
+        try {
+            $transaction = Transaction::where('id', $id);
+            $x = $transaction->first();
+            if ($x) {
+                return ResponseFormatter::success([
+                    'transaction' => $x
+                ], 'Data Transaksi berhasil diambil');
+            } else {
+                return ResponseFormatter::error([
+                    'transaction' => null,
+                ], 'Data Transaksi tidak ditemukan', 404);
+            }
+        } catch (Exception $error) {
+            return ResponseFormatter::error([
+                'error' => $error,
+            ], 'Something went wrong!', 500);
+            //throw $th;
+        }
+    }
+
+
     public function checkout(Request $request)
     {
         try {
