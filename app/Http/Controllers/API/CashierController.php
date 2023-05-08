@@ -205,7 +205,7 @@ class CashierController extends Controller
 
     public function logout(Request $request)
     {
-        $token = $request->cashier()->currentAccessToken()->delete();
+        $token = $request->user()->currentAccessToken()->delete();
 
         return ResponseFormatter::success($token, 'Token Revoked');
     }
