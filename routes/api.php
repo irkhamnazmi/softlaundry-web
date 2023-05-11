@@ -24,7 +24,7 @@ Route::post('login', [CashierController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [CashierController::class, 'logout']);
-    Route::get('cashiers/profile', [CashierController::class, 'profile']);
+    Route::get('profile', [CashierController::class, 'profile']);
     Route::get('cashiers', [CashierController::class, 'all']);
     Route::get('cashiers/get/{id}', [CashierController::class, 'get']);
     Route::put('cashiers/edit', [CashierController::class, 'edit']);
