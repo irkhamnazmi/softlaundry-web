@@ -16,10 +16,12 @@ class MemberController extends Controller
 
         try {
 
-            $member = Member::all();
+            // $member = Member::all();
+            $member = Member::where('name', '<>', '-');
+            $x = $member->get();
 
             return ResponseFormatter::success([
-                'member' => $member,
+                'member' => $x,
             ], 'Member berhasil diambil', 200);
         } catch (Exception $error) {
             return ResponseFormatter::error(
@@ -36,13 +38,6 @@ class MemberController extends Controller
     public function add(Request $request)
     {
         try {
-            $request->validate([
-                'member_id' => ['required', 'string', 'max:255'],
-                'name' => ['required', 'string', 'max:255'],
-                'address' => ['required', 'string', 'max:255'],
-                'phone_number' => ['required', 'string', 'max:255'],
-            ]);
-
             Member::create([
                 'member_id' => $request->member_id,
                 'name' => $request->name,
@@ -69,7 +64,7 @@ class MemberController extends Controller
     public function get($id)
     {
         try {
-            $member = Member::where('id', $id);
+            $member = Member::where('member_id', $id);
             $x = $member->first();
             if ($x) {
                 return ResponseFormatter::success([

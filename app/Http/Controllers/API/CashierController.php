@@ -14,15 +14,18 @@ use Laravel\Fortify\Rules\Password;
 class CashierController extends Controller
 {
 
-    public function all()
+    public function all(Request $request)
     {
 
         try {
 
-            $cashier = Cashier::all();
+            // $cashier = Cashier::all();
+            $id = $request->user()->id;
+            $cashier = Cashier::where('id', '<>', $id);
+            $x = $cashier->get();
 
             return ResponseFormatter::success([
-                'cashier' => $cashier,
+                'cashier' => $x,
             ], 'Data Kasir berhasil diambil', 200);
         } catch (Exception $error) {
             return ResponseFormatter::error(
@@ -58,11 +61,11 @@ class CashierController extends Controller
 
             $cashier = Cashier::where('phone_number', $request->phone_number)->first();
 
-            $tokenResult = $cashier->createToken('authToken')->plainTextToken;
+            // $tokenResult = $cashier->createToken('authToken')->plainTextToken;
 
             return ResponseFormatter::success([
-                'access_token' => $tokenResult,
-                'token_type' => 'Bearer',
+                // 'access_token' => $tokenResult,
+                // 'token_type' => 'Bearer',
                 'cashier' => $cashier
             ], 'Kasir berhasil didaftarkan');
         } catch (Exception $error) {

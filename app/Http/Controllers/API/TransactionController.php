@@ -15,11 +15,11 @@ class TransactionController extends Controller
     public function all(Request $request)
     {
         try {
-            $id = $request->input('id');
+            // $id = $request->input('id');
             $transaction = Transaction::all();
 
             return ResponseFormatter::success([
-                'transaction' => $transaction->load('items.service'),
+                'transaction' => $transaction->load('member', 'cashier', 'items.service'),
             ], 'Transaksi berhasil diambil', 200);
         } catch (Exception $error) {
             return ResponseFormatter::error(
@@ -78,12 +78,13 @@ class TransactionController extends Controller
                 TransactionItem::create([
                     'transactions_id' => $transaction->id,
                     'services_id' => $service['id'],
-                    'qty' => $service['qty']
+                    'sub_price' => $service['sub_price'],
+                    'weight' => $service['weight']
                 ]);
             }
 
             return ResponseFormatter::success([
-                'transaction' => $transaction->load('items.service'),
+                'transaction' => $transaction->load('member', 'cashier', 'items.service'),
             ], 201, 'Transaksi Berhasil');
         } catch (Exception $error) {
             return ResponseFormatter::error(

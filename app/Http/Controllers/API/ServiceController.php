@@ -58,10 +58,6 @@ class ServiceController extends Controller
     public function add(Request $request)
     {
         try {
-            $request->validate([
-                'name' => ['required', 'string', 'max:255'],
-                'price' => ['required', 'integer'],
-            ]);
 
             Service::create([
                 'name' => $request->name,

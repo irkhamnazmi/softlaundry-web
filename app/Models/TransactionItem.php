@@ -18,7 +18,8 @@ class TransactionItem extends Model
     protected $fillable = [
         'transactions_id',
         'services_id',
-        'qty',
+        'weight',
+        'sub_price',
 
     ];
 
